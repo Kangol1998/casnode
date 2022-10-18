@@ -54,6 +54,11 @@ func FilterUnsafeHTML(content string) string {
 	p.AllowAttrs("src").OnElements("source")
 	p.AllowAttrs("type").OnElements("source")
 	p.AllowAttrs("style").OnElements("video")
+	p.AllowElements("plugin")
+	p.AllowElements("groupId")
+	p.AllowElements("artifactId")
+	p.AllowElements("configuration")
+	p.AllowElements("includeSystemScope")
 	res := p.Sanitize(content)
 	return res
 }

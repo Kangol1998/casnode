@@ -34,7 +34,7 @@ func (c *ApiController) AddFavorites() {
 		c.ResponseError("Invalid favorites type")
 		return
 	}
-
+	//查看收藏记录是否已存在
 	favoriteStatus := object.GetFavoritesStatus(memberId, objectId, favoritesType)
 	if favoriteStatus {
 		c.ResponseOk(resp)
@@ -49,11 +49,12 @@ func (c *ApiController) AddFavorites() {
 		CreatedTime:   util.GetCurrentTime(),
 		MemberId:      username,
 	}
-
+	//此处调用等待线程组
 	var wg sync.WaitGroup
 	res := true
 	if favorites.FavoritesType == object.FavorTopic {
 		wg.Add(1)
+		//开启一个线程：
 		go func() {
 			topicId := util.ParseInt(favorites.ObjectId)
 			res = object.ChangeTopicFavoriteCount(topicId, 1)
@@ -69,7 +70,7 @@ func (c *ApiController) AddFavorites() {
 			wg.Done()
 		}()
 	}
-
+	//先add
 	res = object.AddFavorites(&favorites)
 	if favoritesType == object.FavorTopic {
 		topicId := util.ParseInt(objectId)
@@ -155,6 +156,7 @@ func (c *ApiController) GetFavoritesStatus() {
 	favoritesType := c.Input().Get("type")
 
 	var resp Response
+	//查看‘收藏记录’是否已存在
 	if object.IsFavoritesExist(favoritesType) {
 		res := object.GetFavoritesStatus(memberId, objectId, favoritesType)
 		resp = Response{Status: "ok", Msg: "success", Data: res}

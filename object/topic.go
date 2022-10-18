@@ -443,7 +443,7 @@ func UpdateTopicWithLimitCols(id int, topic *Topic) bool {
 
 // AddTopic return add topic result and topic id
 func AddTopic(topic *Topic) (bool, int) {
-	topic.Content = FilterUnsafeHTML(topic.Content)
+	//topic.Content = FilterUnsafeHTML(topic.Content)
 	affected, err := adapter.Engine.Insert(topic)
 	if err != nil {
 		panic(err)

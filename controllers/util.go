@@ -47,6 +47,7 @@ func (c *ApiController) ResponseError(error string, data ...interface{}) {
 	c.ServeJSON()
 }
 
+//判断是否有登录用户
 func (c *ApiController) RequireSignedIn() bool {
 	if c.GetSessionUser() == nil {
 		c.ResponseError("please sign in first")

@@ -142,6 +142,7 @@ func (c *ApiController) GetConsumptionRecord() {
 // @Title GetCheckinBonus
 // @router /get-checkin-bonus [get]
 func (c *ApiController) GetCheckinBonus() {
+	//领取每日登录奖励
 	if c.RequireSignedIn() {
 		return
 	}

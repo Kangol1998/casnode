@@ -188,24 +188,27 @@ func (c *ApiController) AddTopic() {
 		return
 	}
 
+	/**
+	新增主题四要素：节点id 主题title 主题正文context 主题内容body
+	*/
 	var form NewTopicForm
 	err := json.Unmarshal(c.Ctx.Input.RequestBody, &form)
 	if err != nil {
 		panic(err)
 	}
 	title, body, nodeId, editorType, tags := form.Title, form.Body, form.NodeId, form.EditorType, form.Tags
-
+	//判断有没有此节点？ （又不能自定义节点，必然有此节点啊。。。。）
 	node := object.GetNode(nodeId)
 	if node == nil {
 		c.ResponseError("Node does not exist.")
 		return
 	}
-
+	//判断标题是否含敏感词
 	if object.ContainsSensitiveWord(title) {
 		c.ResponseError("Topic title contains sensitive word.")
 		return
 	}
-
+	//判断正文是否包含敏感词
 	if object.ContainsSensitiveWord(body) {
 		c.ResponseError("Topic body contains sensitive word.")
 		return
@@ -236,7 +239,7 @@ func (c *ApiController) AddTopic() {
 		EditorType:     editorType,
 		IsHidden:       node.IsHidden,
 	}
-
+	//拥有积分大于发帖所需积分，可以发帖
 	balance := object.GetMemberBalance(user)
 	if balance < object.CreateTopicCost {
 		c.ResponseError("You don't have enough balance.")
@@ -256,6 +259,7 @@ func (c *ApiController) AddTopic() {
 		return
 	}
 	res, id := object.AddTopic(&topic)
+	//更新积分
 	if res {
 		object.CreateTopicConsumption(user, id)
 
