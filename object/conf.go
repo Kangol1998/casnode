@@ -28,7 +28,7 @@ var (
 	HomePageNodeNum            = 8
 	TopicThanksCost            = 15
 	ReplyThanksCost            = 10
-	CreateTopicCost            = 20
+	CreateTopicCost            = 0
 	CreateReplyCost            = 5
 	TopTopicCost               = 200
 	ReceiveReplyBonus          = 5
